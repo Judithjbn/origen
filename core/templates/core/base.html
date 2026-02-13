@@ -1,0 +1,197 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}D'Origen{% endblock %}</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            black: '#A6C3AF',
+                            dark: '#2d2d2d',
+                            cream: '#fcfbf7',
+                            beige: '#f4f1ea',
+                            accent: '#b49766',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .font-sans { font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        .crumb-particle {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: #f4f1ea;
+            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+            pointer-events: none;
+            z-index: 9999;
+            animation: crumb-fall 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        @keyframes crumb-fall {
+            0% {
+                transform: translate(-50%, -50%) scale(1) rotate(0deg);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0) rotate(180deg);
+                opacity: 0;
+            }
+        }
+
+        .squishy-touch:active {
+            animation: squish 0.3s cubic-bezier(0.25, 1.5, 0.5, 1);
+        }
+
+        @keyframes squish {
+            0% { transform: scale(1); }
+            40% { transform: scale(1.1, 0.85); }
+            80% { transform: scale(0.95, 1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const interactives = document.querySelectorAll('a, button');
+            interactives.forEach(el => el.classList.add('squishy-touch'));
+
+            document.addEventListener('touchstart', (e) => {
+                const touch = e.touches[0];
+                createCrumbs(touch.clientX, touch.clientY);
+            }, {passive: true});
+
+            document.addEventListener('click', (e) => {
+                createCrumbs(e.clientX, e.clientY);
+            });
+
+            function createCrumbs(x, y) {
+                const particleCount = 6;
+                for (let i = 0; i < particleCount; i++) {
+                    const crumb = document.createElement('div');
+                    crumb.classList.add('crumb-particle');
+                    
+                    const angle = Math.random() * Math.PI * 2;
+                    const velocity = 20 + Math.random() * 40;
+                    const tx = Math.cos(angle) * velocity;
+                    const ty = Math.sin(angle) * velocity + 60;
+
+                    crumb.style.setProperty('--tx', `${tx}px`);
+                    crumb.style.setProperty('--ty', `${ty}px`);
+                    crumb.style.left = `${x}px`;
+                    crumb.style.top = `${y}px`;
+
+                    if (Math.random() > 0.7) {
+                        crumb.style.backgroundColor = '#b49766';
+                    }
+
+                    document.body.appendChild(crumb);
+
+                    setTimeout(() => crumb.remove(), 800);
+                }
+            }
+        });
+    </script>
+</head>
+<body class="bg-brand-cream text-brand-black font-sans flex flex-col min-h-screen">
+    <nav class="bg-brand-cream py-6 px-4 sticky top-0 z-50 border-b border-brand-dark/5">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="{% url 'home' %}" class="block w-48 hover:opacity-90 transition-opacity">
+                <img src="{% static 'img/logo.png' %}" alt="Dorigen" class="w-full h-auto">
+            </a>
+            
+            <div class="hidden md:flex items-center space-x-8 text-sm font-medium tracking-wide uppercase">
+                <a href="#services" class="hover:text-brand-accent transition">Servicios</a>
+                <a href="#catering" class="hover:text-brand-accent transition">Catering</a>
+                <a href="#gallery" class="hover:text-brand-accent transition">Galería</a>
+                <a href="#contact" class="hover:text-brand-accent transition">Contacto</a>
+            </div>
+
+            <div class="flex items-center gap-4">
+                {% if site_config %}
+                <a href="https://wa.me/{{ site_config.whatsapp }}?text={{ site_config.whatsapp_message|urlencode }}" target="_blank" class="hidden md:flex bg-brand-black text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-brand-accent transition items-center gap-2">
+                    <span>Pedir Ahora</span>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer id="contact" class="bg-white pt-20 pb-10 border-t border-brand-dark/10">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-12 mb-16">
+                <div class="col-span-1 md:col-span-1">
+                    <h3 class="text-2xl font-serif font-bold mb-6">Dorigen.</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">
+                        Artesanía en cada bocado. Panadería tradicional y catering moderno para tus mejores momentos.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-6 uppercase text-xs tracking-widest text-gray-400">Contacto</h4>
+                    {% if site_config %}
+                    <ul class="space-y-4 text-sm text-gray-600">
+                        <li>{{ site_config.address }}</li>
+                        <li><a href="tel:{{ site_config.phone }}" class="hover:text-brand-black transition">{{ site_config.phone }}</a></li>
+                        <li>{{ site_config.whatsapp }}</li>
+                    </ul>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <h4 class="font-bold mb-6 uppercase text-xs tracking-widest text-gray-400">Horarios</h4>
+                    {% if site_config %}
+                    <div class="text-sm text-gray-600 leading-loose">
+                        {{ site_config.hours|linebreaksbr }}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <h4 class="font-bold mb-6 uppercase text-xs tracking-widest text-gray-400">Síguenos</h4>
+                    <div class="flex space-x-4">
+                        {% if site_config.facebook %}
+                        <a href="{{ site_config.google }}" target="_blank" class="text-gray-400 hover:text-brand-black transition">Google</a>
+                        {% endif %}
+                        {% if site_config.instagram %}
+                        <a href="{{ site_config.instagram }}" target="_blank" class="text-gray-400 hover:text-brand-black transition">Instagram</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-100 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-400">
+                <p>By: sitetive.com. <br>&copy; {% now "Y" %} Todos los derechos reservados.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-brand-black">Privacidad</a>
+                    <a href="#" class="hover:text-brand-black">Términos</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

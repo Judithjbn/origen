@@ -1,0 +1,154 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<section class="relative pt-20 pb-32 overflow-hidden bg-brand-cream">
+    <div class="container mx-auto px-4 text-center relative z-10">
+        {% if content %}
+        <span class="text-brand-accent uppercase tracking-[0.2em] text-sm font-bold mb-4 block">Coffee & Backery</span>
+        <h1 class="text-6xl md:text-8xl font-serif font-bold mb-8 text-brand-black leading-tight">{{ content.hero_title }}</h1>
+        <p class="text-lg md:text-xl text-gray-500 mb-10 max-w-2xl mx-auto leading-relaxed">{{ content.hero_subtitle }}</p>
+        
+        <div class="flex flex-col md:flex-row gap-4 justify-center">
+            {% if site_config %}
+            <a href="https://wa.me/{{ site_config.whatsapp }}?text={{ site_config.whatsapp_message|urlencode }}" target="_blank" class="bg-brand-black text-white px-8 py-4 rounded-full text-sm font-bold hover:bg-brand-dark transition transform hover:-translate-y-1">
+                {{ content.cta_text }}
+            </a>
+            {% endif %}
+            <a href="#services" class="bg-transparent border border-brand-black text-brand-black px-8 py-4 rounded-full text-sm font-bold hover:bg-brand-black hover:text-white transition transform hover:-translate-y-1">
+                Descubrir Más
+            </a>
+        </div>
+        {% else %}
+        <h1 class="text-6xl md:text-8xl font-serif font-bold mb-6 text-brand-black">Delights</h1>
+        {% endif %}
+
+        <div class="mt-16 relative max-w-4xl mx-auto">
+             <div class="aspect-[16/9] bg-brand-beige rounded-2xl overflow-hidden shadow-2xl">
+                 <img src="media/local-1.webp" alt="Pan Artesanal" class="w-full h-full object-cover opacity-90 hover:scale-105 transition duration-700">
+             </div>
+        </div>
+    </div>
+</section>
+
+<div class="w-full overflow-hidden leading-none rotate-180">
+    <svg class="relative block w-[calc(100%+1.3px)] h-[50px] text-white" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+        <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="currentColor"></path>
+    </svg>
+</div>
+
+<section id="services" class="py-24 bg-white">
+    <div class="container mx-auto px-4 text-center">
+        <div class="flex justify-center mb-8">
+            <span class="border rounded-full px-4 py-1 text-xs font-bold uppercase tracking-widest border-brand-black/20 text-gray-500">Calidad Premium</span>
+        </div>
+        <h2 class="text-4xl md:text-5xl font-serif font-bold mb-16 text-brand-black">
+            {% if content %}{{ content.services_title }}{% else %}Why Choose Us{% endif %}
+        </h2>
+        
+        <div class="grid md:grid-cols-3 gap-12 max-w-6xl mx-auto">
+            {% for service in services %}
+            <div class="group p-8 rounded-3xl hover:bg-brand-cream transition duration-500">
+                <div class="h-48 overflow-hidden rounded-2xl mb-8 shadow-sm">
+                    {% if service.image %}
+                    <img src="{{ service.image.url }}" alt="{{ service.name }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                    {% endif %}
+                </div>
+                <h3 class="text-2xl font-serif font-bold mb-4 text-brand-black">{{ service.name }}</h3>
+                <p class="text-gray-500 leading-relaxed mb-6">{{ service.description }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<div class="w-full overflow-hidden leading-none">
+    <svg class="relative block w-[calc(100%+1.3px)] h-[50px] text-brand-cream" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+        <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="currentColor"></path>
+    </svg>
+</div>
+
+<section id="catering" class="py-24 bg-brand-cream">
+    <div class="container mx-auto px-4 text-center">
+        <h2 class="text-4xl md:text-6xl font-serif font-bold mb-6 text-brand-black leading-tight max-w-3xl mx-auto">
+            {% if content %}{{ content.catering_title }}{% else %}Indulge In Culinary Excellence{% endif %}
+        </h2>
+        <div class="w-24 h-1 bg-brand-accent mx-auto mb-16"></div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for pack in catering_packs %}
+            <div class="bg-white rounded-xl p-4 shadow-sm hover:shadow-xl transition duration-300 text-left group">
+                <div class="bg-brand-beige rounded-lg overflow-hidden mb-6 aspect-[4/3] relative">
+                    {% if pack.image %}
+                    <img src="{{ pack.image.url }}" alt="{{ pack.title }}" class="w-full h-full object-cover mix-blend-multiply group-hover:scale-110 transition duration-500">
+                    {% endif %}
+                </div>
+                <div class="px-2">
+                    <h3 class="text-xl font-bold mb-2 text-brand-black font-serif">{{ pack.title }}</h3>
+                    <p class="text-gray-500 text-sm mb-4 line-clamp-2">{{ pack.description }}</p>
+                    <div class="flex justify-between items-center border-t border-gray-100 pt-4 mt-4">
+                        <span class="font-bold text-lg text-brand-black">{{ pack.price_from }}</span>
+                        <a href="https://wa.me/{{ site_config.whatsapp }}?text=Me interesa el pack de catering: {{ pack.title }}" target="_blank" class="bg-brand-black text-white px-4 py-2 text-xs font-bold uppercase tracking-wider rounded hover:bg-brand-accent transition">
+                            Pedir
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="py-24 bg-white overflow-hidden">
+    <div class="container mx-auto px-4">
+        <div class="flex flex-col md:flex-row items-center gap-16">
+            <div class="md:w-1/2">
+                <span class="text-brand-accent font-bold tracking-widest uppercase text-sm mb-2 block">Nuestra Historia</span>
+                <h2 class="text-4xl md:text-5xl font-serif font-bold mb-6 text-brand-black">Tradición y Vanguardia</h2>
+                <p class="text-gray-500 text-lg leading-relaxed mb-8">
+                    Dorigen nace de la pasión por el pan bien hecho y el café de especialidad. Cada día horneamos con masa madre y seleccionamos los mejores granos para ofrecerte una experiencia auténtica.
+                </p>
+            </div>
+            <div class="md:w-1/2 relative">
+                <div class="absolute -top-4 -right-4 w-full h-full border-2 border-brand-beige rounded-2xl z-0"></div>
+                <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?q=80&w=2626&auto=format&fit=crop" alt="Panadero trabajando" class="rounded-2xl shadow-xl relative z-10 w-full">
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="gallery" class="py-24 bg-brand-black text-white">
+    <div class="container mx-auto px-4 text-center">
+        <h2 class="text-4xl font-serif font-bold mb-12">{% if content %}{{ content.gallery_title }}{% else %}Galería{% endif %}</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {% for item in gallery_images %}
+            <div class="aspect-square overflow-hidden rounded-lg relative group">
+                <img src="{{ item.image.url }}" alt="{{ item.alt_text }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700 opacity-80 group-hover:opacity-100">
+                <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition"></div>
+            </div>
+            {% empty %}
+            <div class="aspect-square bg-gray-800 rounded-lg"></div>
+            <div class="aspect-square bg-gray-800 rounded-lg"></div>
+            <div class="aspect-square bg-gray-800 rounded-lg"></div>
+            <div class="aspect-square bg-gray-800 rounded-lg"></div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="py-24 bg-brand-cream relative overflow-hidden">
+    <div class="container mx-auto px-4 relative z-10 text-center">
+        <h2 class="text-5xl font-serif font-bold mb-6">¿Listo para probar?</h2>
+        <p class="text-gray-500 mb-8 max-w-xl mx-auto">Visítanos hoy o haz tu pedido por WhatsApp para recoger.</p>
+        {% if site_config %}
+        <a href="https://wa.me/{{ site_config.whatsapp }}" class="inline-block bg-brand-accent text-white text-xl px-10 py-4 rounded-full font-bold shadow-lg hover:shadow-xl hover:-translate-y-1 transition transform">
+            Contactar Ahora
+        </a>
+        {% endif %}
+    </div>
+    <div class="absolute top-0 left-0 w-full h-full opacity-5 pointer-events-none">
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" class="w-full h-full">
+            <path d="M0 100 C 20 0 50 0 100 100 Z" fill="currentColor"></path>
+        </svg>
+    </div>
+</section>
+{% endblock %}
